@@ -7,8 +7,10 @@ import pygame
 from newsapi import NewsApiClient
 import os
 import tempfile
+from dotenv import load_dotenv
 
-news_api_key = "f9ed639e79d049e382e3fe21d4890633"
+load_dotenv()
+news_api_key = os.getenv("news_api_key")
 
 r = sr.Recognizer()
 newsapi = NewsApiClient(api_key=news_api_key)
