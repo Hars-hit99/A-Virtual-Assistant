@@ -1,10 +1,10 @@
-# Jarvis — Voice-Controlled Desktop Assistant
+# Spora — Voice-Controlled Desktop Assistant
 
-A Python-based voice assistant that listens for a wake word, understands spoken commands, and responds out loud. Jarvis can open websites, play music, read the news, search Wikipedia, and answer open-ended questions using Google's Gemini API.
+A Python-based voice assistant that listens for a wake word, understands spoken commands, and responds out loud. Spora can open websites, play music, read the news, search Wikipedia, and answer open-ended questions using Google's Gemini API.
 
 ## Features
 
-- **Wake-word activation** — listens passively and springs into action when it hears "Jarvis"
+- **Wake-word activation** — listens passively and springs into action when it hears "Spora"
 - **Voice input & output** — uses Google Speech Recognition for input and gTTS for natural-sounding spoken responses
 - **Web shortcuts** — opens Google, YouTube, GitHub, LinkedIn, Instagram, and more on command
 - **Music playback** — plays tracks from a configurable local music library
@@ -37,8 +37,8 @@ A Python-based voice assistant that listens for a wake word, understands spoken 
 ### Installation
 
 ```bash
-git clone https://github.com/<your-username>/jarvis-voice-assistant.git
-cd jarvis-voice-assistant
+git clone https://github.com/<your-username>/Spora-voice-assistant.git
+cd Spora-voice-assistant
 pip install -r requirements.txt
 ```
 
@@ -54,14 +54,14 @@ GEMINI_API_KEY=your_gemini_key_here
 ### Run
 
 ```bash
-python jarvis.py
+python Spora.py
 ```
 
-Say **"Jarvis"** to wake it up, then speak your command.
+Say **"Spora"** to wake it up, then speak your command.
 
 ## Example Commands
 
-| Say this                          | Jarvis does                          |
+| Say this                          | Spora does                          |
 |------------------------------------|----------------------------------------|
 | "Open YouTube"                     | Opens youtube.com                      |
 | "Play [song name]"                 | Plays a track from your music library  |
@@ -71,13 +71,13 @@ Say **"Jarvis"** to wake it up, then speak your command.
 | "Who is Marie Curie"               | Reads a Wikipedia summary               |
 | "What's the capital of Japan"      | Falls back to Gemini for an answer      |
 | "Ask Gemini to explain quantum computing" | Sends the question directly to Gemini |
-| "Stop" / "Goodbye"                 | Shuts Jarvis down                       |
+| "Stop" / "Goodbye"                 | Shuts Spora down                       |
 
 ## Project Structure
 
 ```
-jarvis-voice-assistant/
-├── jarvis.py           # Main assistant logic
+Spora-voice-assistant/
+├── Spora.py           # Main assistant logic
 ├── musiclibrary.py     # Song name → URL mapping
 ├── .env                # API keys (not committed)
 ├── requirements.txt    # Python dependencies
@@ -95,7 +95,7 @@ This project is an evolving playground for exploring voice-driven, agentic assis
 - [ ] **Smart home integration** — control lights, plugs, and thermostats via Home Assistant or similar APIs
 - [ ] **Calendar & reminders** — read/write to Google Calendar for scheduling and reminders
 - [ ] **Email assistant** — read unread emails aloud and draft replies via voice
-- [ ] **Custom wake word** ("Hey Jarvis" personalization)
+- [ ] **Custom wake word** ("Hey Spora" personalization)
 - [ ] **Cross-platform packaging** — ship as a standalone app (PyInstaller) for easy installation
 - [ ] **Plugin architecture** — let commands be registered as modular plugins instead of hardcoded `if` branches
 - [ ] **Multi-language support** for both recognition and speech output

@@ -26,7 +26,7 @@ newsapi = NewsApiClient(api_key=news_api_key)
 pygame.mixer.init()
 
 def speak(text):
-    print(f"Jarvis: {text}")
+    print(f"Spora: {text}")
     try:
         # Generate speech mp3 in a temp file
         tts = gTTS(text=text, lang='en', tld='co.in', slow=False)
@@ -232,7 +232,7 @@ def perform_task(command):
 
 
 if __name__ == "__main__":
-    speak("Initializing Jarvis.")
+    speak("Initializing Spora.")
     running = True
 
     while running:
@@ -245,7 +245,7 @@ if __name__ == "__main__":
             word = r.recognize_google(audio)
             print(f"Heard: {word}")
 
-            if "jarvis" in word.lower():
+            if "spora" in word.lower():
                 speak("Yes Spotty")
                 with sr.Microphone() as source:
                     r.adjust_for_ambient_noise(source, duration=0.3)
@@ -266,4 +266,4 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"Unexpected error: {e}")
 
-    print("Jarvis offline.")
+    print("Spora offline.")
