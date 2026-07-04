@@ -8,9 +8,16 @@ from newsapi import NewsApiClient
 import os
 import tempfile
 from dotenv import load_dotenv
+import wikipedia
+import requests
 
 load_dotenv()
 news_api_key = os.getenv("news_api_key")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+
+GEMINI_MODEL = "gemini-2.0-flash"
+GEMINI_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent"
+ 
 
 r = sr.Recognizer()
 newsapi = NewsApiClient(api_key=news_api_key)
@@ -83,6 +90,86 @@ def get_news(command):
 
     return True
 
+def search_wikipedia(command):
+    try:
+        # Pull out the search term after common trigger words
+        topic = command
+        keywords = ["wikipedia","search"]
+        for kw in keywords:
+            if kw in command.lower():
+                # split on the keyword (case-insensitive) and take what's after it
+                idx = command.lower().find(kw)
+                topic = command[idx + len(kw):].strip()
+                break
+ 
+        if not topic:
+            speak("What would you like me to look up on Wikipedia?")
+            return True
+ 
+        speak(f"Searching Wikipedia for {topic}")
+ 
+        try:
+            summary = wikipedia.summary(topic, sentences=2)
+            print(f"Wikipedia: {summary}")
+            speak(summary)
+        except wikipedia.exceptions.DisambiguationError as e:
+            # Multiple matches found; just use the first suggested option
+            options = e.options[:5]
+            first_option = options[0]
+            speak(f"That was ambiguous. Showing results for {first_option}")
+            summary = wikipedia.summary(first_option, sentences=2)
+            print(f"Wikipedia: {summary}")
+            speak(summary)
+        except wikipedia.exceptions.PageError:
+            speak(f"Sorry, I couldn't find a Wikipedia page for {topic}")
+ 
+    except Exception as e:
+        print(f"Wikipedia error: {e}")
+        speak("Sorry, something went wrong while searching Wikipedia")
+ 
+    return True
+
+    def ask_gemini(command):
+        if not gemini_api_key:
+            speak("Gemini API key is not set up, so I can't answer that.")
+            return True
+    
+        try:
+            speak("Let me think about that")
+    
+            headers = {"Content-Type": "application/json"}
+            params = {"key": gemini_api_key}
+            payload = {
+                "contents": [
+                    {
+                        "parts": [
+                            {"text": f"Answer briefly and conversationally, in 2-3 sentences, "
+                                    f"since this will be read aloud: {command}"}
+                        ]
+                    }
+                ]
+            }
+    
+            response = requests.post(GEMINI_URL, headers=headers, params=params, json=payload, timeout=15)
+            response.raise_for_status()
+            data = response.json()
+    
+            answer = data["candidates"][0]["content"]["parts"][0]["text"].strip()
+            print(f"Gemini: {answer}")
+            speak(answer)
+    
+        except requests.exceptions.RequestException as e:
+            print(f"Gemini request error: {e}")
+            speak("Sorry, I couldn't reach Gemini right now.")
+        except (KeyError, IndexError) as e:
+            print(f"Gemini response parsing error: {e}")
+            speak("Sorry, I got an unexpected response from Gemini.")
+        except Exception as e:
+            print(f"Gemini error: {e}")
+            speak("Sorry, something went wrong asking Gemini.")
+    
+        return True
+ 
 
 def perform_task(command):
     cmd = command.lower()
@@ -132,8 +219,16 @@ def perform_task(command):
     if "news" in cmd:
         return get_news(cmd)
 
-    speak("Sorry, I didn't understand that command")
-    return True
+    # Wikipedia
+    if any(kw in cmd for kw in ["wikipedia","search"]):
+        return search_wikipedia(cmd)
+
+    # Explicit Gemini trigger
+    if any(kw in cmd for kw in ["ask gemini", "gemini,"]):
+        return ask_gemini(cmd)
+ 
+    # Fallback: send anything unmatched to Gemini
+    return ask_gemini(cmd)
 
 
 if __name__ == "__main__":
