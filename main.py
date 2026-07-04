@@ -13,9 +13,9 @@ import requests
 
 load_dotenv()
 news_api_key = os.getenv("news_api_key")
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+gemini_api_key = os.getenv("GEMINI_API_KEY")
 
-GEMINI_MODEL = "gemini-2.0-flash"
+GEMINI_MODEL = "gemini-3.5-flash"
 GEMINI_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent"
  
 
@@ -129,53 +129,53 @@ def search_wikipedia(command):
  
     return True
 
-    def ask_gemini(command):
-        if not gemini_api_key:
-            speak("Gemini API key is not set up, so I can't answer that.")
-            return True
-    
-        try:
-            speak("Let me think about that")
-    
-            headers = {"Content-Type": "application/json"}
-            params = {"key": gemini_api_key}
-            payload = {
-                "contents": [
-                    {
-                        "parts": [
-                            {"text": f"Answer briefly and conversationally, in 2-3 sentences, "
-                                    f"since this will be read aloud: {command}"}
-                        ]
-                    }
-                ]
-            }
-    
-            response = requests.post(GEMINI_URL, headers=headers, params=params, json=payload, timeout=15)
-            response.raise_for_status()
-            data = response.json()
-    
-            answer = data["candidates"][0]["content"]["parts"][0]["text"].strip()
-            print(f"Gemini: {answer}")
-            speak(answer)
-    
-        except requests.exceptions.RequestException as e:
-            print(f"Gemini request error: {e}")
-            speak("Sorry, I couldn't reach Gemini right now.")
-        except (KeyError, IndexError) as e:
-            print(f"Gemini response parsing error: {e}")
-            speak("Sorry, I got an unexpected response from Gemini.")
-        except Exception as e:
-            print(f"Gemini error: {e}")
-            speak("Sorry, something went wrong asking Gemini.")
-    
+def ask_gemini(command):
+    if not gemini_api_key:
+        speak("Gemini API key is not set up, so I can't answer that.")
         return True
+
+    try:
+        speak("Let me think about that")
+
+        headers = {"Content-Type": "application/json"}
+        params = {"key": gemini_api_key}
+        payload = {
+            "contents": [
+                {
+                    "parts": [
+                        {"text": f"Answer briefly and conversationally, in 2-3 sentences, "
+                                f"since this will be read aloud: {command}"}
+                    ]
+                }
+            ]
+        }
+
+        response = requests.post(GEMINI_URL, headers=headers, params=params, json=payload, timeout=15)
+        response.raise_for_status()
+        data = response.json()
+
+        answer = data["candidates"][0]["content"]["parts"][0]["text"].strip()
+        print(f"Gemini: {answer}")
+        speak(answer)
+
+    except requests.exceptions.RequestException as e:
+        print(f"Gemini request error: {e}")
+        speak("Sorry, I couldn't reach Gemini right now.")
+    except (KeyError, IndexError) as e:
+        print(f"Gemini response parsing error: {e}")
+        speak("Sorry, I got an unexpected response from Gemini.")
+    except Exception as e:
+        print(f"Gemini error: {e}")
+        speak("Sorry, something went wrong asking Gemini.")
+
+    return True
  
 
 def perform_task(command):
     cmd = command.lower()
 
     # Exit
-    if any(w in cmd for w in ["stop", "exit", "goodbye", "shut down", "shutdown"]):
+    if any(w in cmd for w in ["stop", "exit", "goodbye", "shut down", "shutdown", "bye bye"]):
         speak("Goodbye! Shutting down.")
         return False
 
@@ -227,7 +227,7 @@ def perform_task(command):
     if any(kw in cmd for kw in ["ask gemini", "gemini,"]):
         return ask_gemini(cmd)
  
-    # Fallback: send anything unmatched to Gemini
+    # Fallback: send anything unmatched to Gemini instead of just failing
     return ask_gemini(cmd)
 
 
