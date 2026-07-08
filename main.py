@@ -22,13 +22,11 @@ GEMINI_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_M
 r = sr.Recognizer()
 newsapi = NewsApiClient(api_key=news_api_key)
 
-# Initialize pygame mixer for audio playback
 pygame.mixer.init()
 
 def speak(text):
     print(f"Spora: {text}")
     try:
-        # Generate speech mp3 in a temp file
         tts = gTTS(text=text, lang='en', tld='co.in', slow=False)
         
         with tempfile.NamedTemporaryFile(delete=False, suffix='.mp3') as f:
@@ -36,16 +34,14 @@ def speak(text):
         
         tts.save(temp_path)
         
-        # Play it
         pygame.mixer.music.load(temp_path)
         pygame.mixer.music.play()
         
-        # Wait for playback to finish
         while pygame.mixer.music.get_busy():
             pygame.time.Clock().tick(20)
         
         pygame.mixer.music.unload()
-        os.remove(temp_path)  # Clean up temp file
+        os.remove(temp_path)  
         
     except Exception as e:
         print(f"Speech error: {e}")
@@ -92,12 +88,11 @@ def get_news(command):
 
 def search_wikipedia(command):
     try:
-        # Pull out the search term after common trigger words
+        
         topic = command
         keywords = ["wikipedia","search"]
         for kw in keywords:
             if kw in command.lower():
-                # split on the keyword (case-insensitive) and take what's after it
                 idx = command.lower().find(kw)
                 topic = command[idx + len(kw):].strip()
                 break
@@ -113,7 +108,6 @@ def search_wikipedia(command):
             print(f"Wikipedia: {summary}")
             speak(summary)
         except wikipedia.exceptions.DisambiguationError as e:
-            # Multiple matches found; just use the first suggested option
             options = e.options[:5]
             first_option = options[0]
             speak(f"That was ambiguous. Showing results for {first_option}")
