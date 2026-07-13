@@ -1,5 +1,6 @@
 from plugins.base import Plugin
 from services.tts import speak
+import requests
 
 GEOCODE_URL = "https://geocoding-api.open-meteo.com/v1/search"
 FORECAST_URL = "https://api.open-meteo.com/v1/forecast"
@@ -34,7 +35,7 @@ class WeatherPlugin(Plugin):
     default_city = "Gaya"
 
     def matches(self, command):
-        cmd = command.lower
+        cmd = command.lower()
         return "weather" in cmd
 
     def run(self, command):
