@@ -13,12 +13,12 @@ class GeminiPlugin(Plugin):
     name = "gemini"
     priority = 999  # always last -> catch-all
 
-    def matches(self, command: str) -> bool:
+    def matches(self, command) :
         # Catch-all: this plugin matches everything that reaches it,
         # since PluginManager only gets here if nothing else matched.
         return True
 
-    def run(self, command: str) -> bool:
+    def run(self, command):
         if not GEMINI_API_KEY:
             speak("Gemini API key is not set up, so I can't answer that.")
             return True

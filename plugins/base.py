@@ -5,9 +5,9 @@ class Plugin(ABC):
     priority = 100 #lower would be checked first
 
     @abstractmethod
-    def matches(self, command):
+    def matches(self, command: str) -> bool:
         raise NotImplementedError
 
     @abstractmethod
-    def run(self, command):
+    def run(self, command: str) -> bool:
         raise NotImplementedError

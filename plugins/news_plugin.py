@@ -11,10 +11,10 @@ class NewsPlugin(Plugin):
     def __init__(self):
         self.client = NewsApiClient(api_key=NEWS_API_KEY)
 
-    def matches(self, command: str) -> bool:
+    def matches(self, command):
         return "news" in command.lower()
 
-    def run(self, command: str) -> bool:
+    def run(self, command):
         try:
             topic = None
             keywords = ["about", "on", "related to", "regarding"]
