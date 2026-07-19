@@ -73,7 +73,7 @@ class WeatherPlugin(Plugin):
 
         return ""
 
-    def _geocode(self, city: str):
+    def _geocode(self, city):
         resp = requests.get(GEOCODE_URL, params={"name": city, "count": 1}, timeout=10)
         resp.raise_for_status()
         results = resp.json().get("results")
@@ -83,7 +83,7 @@ class WeatherPlugin(Plugin):
         return top["latitude"], top["longitude"], top["name"]
 
 
-    def _get_forecast(self, lat: float, lon: float):
+    def _get_forecast(self, lat, lon):
         params = {
             "latitude": lat,
             "longitude": lon,

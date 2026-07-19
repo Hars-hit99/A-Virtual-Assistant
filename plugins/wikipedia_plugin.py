@@ -8,11 +8,11 @@ class WikipediaPlugin(Plugin):
     priority = 40
     triggers = ["wikipedia", "search", "who is", "what is"]
 
-    def matches(self, command: str) -> bool:
+    def matches(self, command):
         cmd = command.lower()
         return any(kw in cmd for kw in self.triggers)
 
-    def run(self, command: str) -> bool:
+    def run(self, command):
         try:
             topic = command
             for kw in self.triggers:
